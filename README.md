@@ -1,3 +1,6 @@
+## Fork changes
+This fork includes the Arduino Keyboard library to make it easier to create buttons that acts as a keyboard.
+
 ## ezButton Library for Arduino, ESP32, ESP8266...
 This library is designed to make it easy to use push button, momentary switches, toggle switch, magnetic contact switch (door sensor)..​. It is easy to use for not only beginners but also experienced users.
 
