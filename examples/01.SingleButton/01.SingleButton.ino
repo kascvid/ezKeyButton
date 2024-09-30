@@ -11,8 +11,7 @@
 #include <ezKeyButton.h>
 #include <Keyboard.h>
 
-ezKeyButton button(2, 'a');  // Create ezKeyButton object with pin, mode, and keyboard key
-  // create ezButton object that attaches to pin 2 and sends 'a' key
+ezKeyButton button(2, 'a');  // create ezButton object that attaches to pin 2 and sends 'a' key
 
 void setup() {
   Keyboard.begin();
