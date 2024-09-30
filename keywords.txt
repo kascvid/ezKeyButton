@@ -21,6 +21,7 @@ isReleased	KEYWORD2
 setCountMode	KEYWORD2
 getCount	KEYWORD2
 resetCount	KEYWORD2
+loop	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
