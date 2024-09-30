@@ -67,6 +67,35 @@ ezKeyButton::ezKeyButton(int pin, int mode, char key) {
     lastDebounceTime = 0;
 }
 
+// Constructor with pin and mode
+ezKeyButton::ezKeyButton(int pin, int mode) {
+    btnPin = pin;
+    debounceTime = 0;
+    count = 0;
+    countMode = COUNT_FALLING;
+
+    if (mode == INTERNAL_PULLUP || mode == INTERNAL_PULLDOWN) {
+        pinMode(btnPin, mode);
+    } else if (mode == EXTERNAL_PULLUP || mode == EXTERNAL_PULLDOWN) {
+        pinMode(btnPin, INPUT);  // External pull-up/pull-down, set as INPUT
+    }
+
+    // Set the pressed and unpressed states based on the mode
+    if (mode == INTERNAL_PULLDOWN || mode == EXTERNAL_PULLDOWN) {
+        pressedState = HIGH;
+        unpressedState = LOW;
+    } else {
+        pressedState = LOW;
+        unpressedState = HIGH;
+    }
+
+    previousSteadyState = digitalRead(btnPin);
+    lastSteadyState = previousSteadyState;
+    lastFlickerableState = previousSteadyState;
+
+    lastDebounceTime = 0;
+}
+
 void ezKeyButton::setDebounceTime(unsigned long time) {
     debounceTime = time;
 }

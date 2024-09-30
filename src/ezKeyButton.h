@@ -40,6 +40,7 @@ class ezKeyButton
 		ezKeyButton(int pin);                 // Constructor for pin only
 		ezKeyButton(int pin, char key);       // Constructor for pin and keyboard key
 		ezKeyButton(int pin, int mode);       // Constructor for pin with mode
+		ezKeyButton(int pin, int mode, char key); // Constructor for pin, mode, and keyboard key (newly added)
 		void setDebounceTime(unsigned long time);  // Set debounce time
 		int getState(void);                // Get the stable state of the button
 		int getStateRaw(void);             // Get the raw state of the button
