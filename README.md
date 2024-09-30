@@ -10,6 +10,7 @@ __ezKeyButton__ stands for __Easy Keyboard Button__
 
 Features
 ----------------------------
+* UPDATED FROM ORIGINAL ezButton LIBRARY: make it easier to create buttons that acts as a keyboard. Uses the write and release functions in the Keyboard.h Arduino library.
 * Uses the internal pull-up resistor by default to avoid the floating value
 * Supports debounce to eliminate the chattering phenomenon
 * Supports the pressed and released events
