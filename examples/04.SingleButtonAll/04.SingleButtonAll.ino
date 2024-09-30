@@ -1,9 +1,9 @@
 /*
- * Created by ArduinoGetStarted.com
+ * Created by ArduinoGetStarted.com, modified by Viden Djurs
  *
  * This example code is in the public domain
  *
- * Tutorial page: https://arduinogetstarted.com/tutorials/arduino-button-library
+ * Master for original library: https://arduinogetstarted.com/tutorials/arduino-button-library
  *
  * This example:
  *   + uses debounce for a button.
@@ -12,23 +12,36 @@
  */
 
 #include <ezButton.h>
+#include <Keyboard.h>
 
-ezButton button(7);  // create ezButton object that attach to pin 7;
+ezButton button1(2, 'x');  // create ezButton object that attaches to pin 2 and sends 'x' key
+ezButton button2(3, 'y');  // create ezButton object that attaches to pin 3 and sends 'y' key
 
 void setup() {
-  Serial.begin(9600);
-  button.setDebounceTime(50); // set debounce time to 50 milliseconds
+  Keyboard.begin();
 }
 
 void loop() {
-  button.loop(); // MUST call the loop() function first
+  button1.loop();
+  button2.loop();
 
-  int btnState = button.getState();
-  Serial.println(btnState);
+  if (button1.isPressed()) {
+    // Simulates 'x' keypress
+    Serial.println("Button 1 is pressed, 'x' key sent");
+  }
 
-  if(button.isPressed())
-    Serial.println("The button is pressed");
+  if (button1.isReleased()) {
+    // Stops pressing the 'x' key
+    Serial.println("Button 1 is released, 'x' key released");
+  }
 
-  if(button.isReleased())
-    Serial.println("The button is released");
+  if (button2.isPressed()) {
+    // Simulates 'y' keypress
+    Serial.println("Button 2 is pressed, 'y' key sent");
+  }
+
+  if (button2.isReleased()) {
+    // Stops pressing the 'y' key
+    Serial.println("Button 2 is released, 'y' key released");
+  }
 }

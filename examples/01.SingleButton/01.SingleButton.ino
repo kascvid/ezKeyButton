@@ -1,24 +1,32 @@
 /*
- * Created by ArduinoGetStarted.com
+ * Created by ArduinoGetStarted.com, modified by Viden Djurs
  *
  * This example code is in the public domain
  *
- * Tutorial page: https://arduinogetstarted.com/tutorials/arduino-button-library
+ * Master for original library: https://arduinogetstarted.com/tutorials/arduino-button-library
  *
  * This example reads the state of a button without debounce and print it to Serial Monitor.
  */
 
 #include <ezButton.h>
+#include <Keyboard.h>
 
-ezButton button(7);  // create ezButton object that attach to pin 7;
+ezButton button(2, 'a');  // create ezButton object that attaches to pin 2 and sends 'a' key
 
 void setup() {
-  Serial.begin(9600);
+  Keyboard.begin();
 }
 
 void loop() {
-  button.loop(); // MUST call the loop() function first
+  button.loop(); // Must call the loop function first
 
-  int btnState = button.getState();
-  Serial.println(btnState);
+  if (button.isPressed()) {
+    // Simulates 'a' keypress
+    Serial.println("The button is pressed, 'a' key sent");
+  }
+
+  if (button.isReleased()) {
+    // Stops pressing the 'a' key
+    Serial.println("The button is released, 'a' key released");
+  }
 }

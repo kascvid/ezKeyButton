@@ -5,6 +5,8 @@ This fork includes the Arduino Keyboard library to make it easier to create butt
 This library is designed to make it easy to use push button, momentary switches, toggle switch, magnetic contact switch (door sensor)..​. It is easy to use for not only beginners but also experienced users.
 
 __ezButton__ stands for __Easy Button__
+__ezKeyButton__ stands for __Easy Keyboard Button__
+
 
 Features
 ----------------------------
@@ -18,13 +20,13 @@ Features
 
 Available Examples
 ----------------------------
+These examples are modified to suit this library. Only four examples are included here. For more examples see the original ezButton library.
+
 * [01.SingleButton](https://arduinogetstarted.com/library/button/example/arduino-single-button)
 * [02.SingleButtonEvents](https://arduinogetstarted.com/library/button/example/arduino-single-button-events)
 * [03.SingleButtonDebounce](https://arduinogetstarted.com/library/button/example/arduino-single-button-debounce)
 * [04.SingleButtonAll](https://arduinogetstarted.com/library/button/example/arduino-single-button-all)
-* [05.MultipleButtonAll](https://arduinogetstarted.com/library/button/example/arduino-multiple-button-all)
-* [06.ButtonCount](https://arduinogetstarted.com/library/button/example/arduino-button-count)
-* [07.ButtonArray](https://arduinogetstarted.com/library/button/example/arduino-button-array)
+
 
 
 Available Functions
@@ -32,8 +34,8 @@ Available Functions
 * setDebounceTime()
 * getState()
 * getStateRaw()
-* isPressed()
-* isReleased()
+* isPressed() with Keyboard.write();
+* isReleased() with Keyboard.release();
 * setCountMode()
 * getCount()
 * resetCount()
