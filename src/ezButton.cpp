@@ -30,111 +30,122 @@
  */
 
 #include <ezButton.h>
+#include <Keyboard.h> // Include the Arduino Keyboard library
 
-ezButton::ezButton(int pin): ezButton(pin, INTERNAL_PULLUP) {};
+// Constructor with pin and key for keyboard input
+ezButton::ezButton(int pin, char key): ezButton(pin, INTERNAL_PULLUP) {
+    btnKey = key;  // Set the key for keyboard input
+};
 
-ezButton::ezButton(int pin, int mode) {
-	btnPin = pin;
-	debounceTime = 0;
-	count = 0;
-	countMode = COUNT_FALLING;
-	
-	if (mode == INTERNAL_PULLUP || mode == INTERNAL_PULLDOWN) {
-		pinMode(btnPin, mode);
-	} else if (mode == EXTERNAL_PULLUP || mode == EXTERNAL_PULLDOWN) {
-		pinMode(btnPin, INPUT);  // External pull-up/pull-down, set as INPUT
-	}
+// Updated constructor with pin and mode (and key support)
+ezButton::ezButton(int pin, int mode, char key) {
+    btnPin = pin;
+    btnKey = key;  // Set the key for keyboard input
+    debounceTime = 0;
+    count = 0;
+    countMode = COUNT_FALLING;
 
-	// Set the pressed and unpressed states based on the mode
-	if (mode == INTERNAL_PULLDOWN || mode == EXTERNAL_PULLDOWN) {
-		pressedState = HIGH;
-		unpressedState = LOW;
-	} else {
-		pressedState = LOW;
-		unpressedState = HIGH;
-	}
+    if (mode == INTERNAL_PULLUP || mode == INTERNAL_PULLDOWN) {
+        pinMode(btnPin, mode);
+    } else if (mode == EXTERNAL_PULLUP || mode == EXTERNAL_PULLDOWN) {
+        pinMode(btnPin, INPUT);  // External pull-up/pull-down, set as INPUT
+    }
 
-	previousSteadyState = digitalRead(btnPin);
-	lastSteadyState = previousSteadyState;
-	lastFlickerableState = previousSteadyState;
+    // Set the pressed and unpressed states based on the mode
+    if (mode == INTERNAL_PULLDOWN || mode == EXTERNAL_PULLDOWN) {
+        pressedState = HIGH;
+        unpressedState = LOW;
+    } else {
+        pressedState = LOW;
+        unpressedState = HIGH;
+    }
 
-	lastDebounceTime = 0;
+    previousSteadyState = digitalRead(btnPin);
+    lastSteadyState = previousSteadyState;
+    lastFlickerableState = previousSteadyState;
+
+    lastDebounceTime = 0;
 }
 
 void ezButton::setDebounceTime(unsigned long time) {
-	debounceTime = time;
+    debounceTime = time;
 }
 
 int ezButton::getState(void) {
-	return lastSteadyState;
+    return lastSteadyState;
 }
 
 int ezButton::getStateRaw(void) {
-	return digitalRead(btnPin);
+    return digitalRead(btnPin);
 }
 
+// Modified isPressed function to send a keyboard press
 bool ezButton::isPressed(void) {
-	if(previousSteadyState == unpressedState && lastSteadyState == pressedState)
-		return true;
-	else
-		return false;
+    if (previousSteadyState == unpressedState && lastSteadyState == pressedState) {
+        Keyboard.press(btnKey);  // Press the assigned keyboard key
+        return true;
+    } else {
+        return false;
+    }
 }
 
+// Modified isReleased function to send a keyboard release
 bool ezButton::isReleased(void) {
-	if(previousSteadyState == pressedState && lastSteadyState == unpressedState)
-		return true;
-	else
-		return false;
+    if (previousSteadyState == pressedState && lastSteadyState == unpressedState) {
+        Keyboard.release(btnKey);  // Release the assigned keyboard key
+        return true;
+    } else {
+        return false;
+    }
 }
 
 void ezButton::setCountMode(int mode) {
-	countMode = mode;
+    countMode = mode;
 }
 
 unsigned long ezButton::getCount(void) {
-	return count;
+    return count;
 }
 
 void ezButton::resetCount(void) {
-	count = 0;
+    count = 0;
 }
 
 void ezButton::loop(void) {
-	// read the state of the switch/button:
-	int currentState = digitalRead(btnPin);
-	unsigned long currentTime = millis();
+    // read the state of the switch/button:
+    int currentState = digitalRead(btnPin);
+    unsigned long currentTime = millis();
 
-	// check to see if you just pressed the button
-	// (i.e. the input went from LOW to HIGH), and you've waited long enough
-	// since the last press to ignore any noise:
+    // check to see if you just pressed the button
+    // (i.e. the input went from LOW to HIGH), and you've waited long enough
+    // since the last press to ignore any noise:
 
-	// If the switch/button changed, due to noise or pressing:
-	if (currentState != lastFlickerableState) {
-		// reset the debouncing timer
-		lastDebounceTime = currentTime;
-		// save the the last flickerable state
-		lastFlickerableState = currentState;
-	}
+    // If the switch/button changed, due to noise or pressing:
+    if (currentState != lastFlickerableState) {
+        // reset the debouncing timer
+        lastDebounceTime = currentTime;
+        // save the last flickerable state
+        lastFlickerableState = currentState;
+    }
 
-	if ((currentTime - lastDebounceTime) >= debounceTime) {
-		// whatever the reading is at, it's been there for longer than the debounce
-		// delay, so take it as the actual current state:
+    if ((currentTime - lastDebounceTime) >= debounceTime) {
+        // whatever the reading is at, it's been there for longer than the debounce
+        // delay, so take it as the actual current state:
 
-		// save the the steady state
-		previousSteadyState = lastSteadyState;
-		lastSteadyState = currentState;
-	}
+        // save the steady state
+        previousSteadyState = lastSteadyState;
+        lastSteadyState = currentState;
+    }
 
-	if(previousSteadyState != lastSteadyState){
-		if(countMode == COUNT_BOTH)
-			count++;
-		else if(countMode == COUNT_FALLING){
-			if(previousSteadyState == HIGH && lastSteadyState == LOW)
-				count++;
-		}
-		else if(countMode == COUNT_RISING){
-			if(previousSteadyState == LOW && lastSteadyState == HIGH)
-				count++;
-		}
-	}
+    if (previousSteadyState != lastSteadyState) {
+        if (countMode == COUNT_BOTH)
+            count++;
+        else if (countMode == COUNT_FALLING) {
+            if (previousSteadyState == HIGH && lastSteadyState == LOW)
+                count++;
+        } else if (countMode == COUNT_RISING) {
+            if (previousSteadyState == LOW && lastSteadyState == HIGH)
+                count++;
+        }
+    }
 }
